@@ -11,39 +11,47 @@
 #include <optional>
 
 class Sheet : public SheetInterface {
-	public:
-		~Sheet();
+  public:
 
-		void SetCell(Position pos, std::string text) override;
+  ~Sheet();
 
-		const CellInterface* GetCell(Position pos) const override;
+  void SetCell(Position pos, std::string text) override;
 
-		CellInterface* GetCell(Position pos) override;
+  const CellInterface* GetCell(Position pos) const override;
 
-		void ClearCell(Position pos) override;
+  CellInterface* GetCell(Position pos) override;
 
-		Size GetPrintableSize() const override;
+  void ClearCell(Position pos) override;
 
-		void PrintValues(std::ostream& output) const override;
+  Size GetPrintableSize() const override;
 
-		void PrintTexts(std::ostream& output) const override;
+  void PrintValues(std::ostream& output) const override;
 
-		const Cell* GetConcreteCell(Position pos) const;
+  void PrintTexts(std::ostream& output) const override;
 
-		Cell* GetConcreteCell(Position pos);
+  const Cell* GetConcreteCell(Position pos) const;
 
-	private:
-		class SheetHasher {
-			public:
-				size_t operator()(const Position pos) const { return std::hash<std::string>()(pos.ToString()); }
-		};
+  Cell* GetConcreteCell(Position pos);
 
-		class SheetKeyEqual {
-			public:
-				bool operator()(const Position& lhs, const Position& rhs) const { return lhs == rhs; }
-		};
+  private:
 
-		std::unordered_map<Position, std::unique_ptr<Cell>, SheetHasher, SheetKeyEqual> sheet_;
+  class SheetHasher {
+    public:
+    size_t operator()(const Position pos) const {
+      return std::hash<std::string>()(pos.ToString());
+    }
+  };
+
+  class SheetKeyEqual {
+    public:
+    bool operator()(const Position& lhs, const Position& rhs) const {
+      return lhs == rhs;
+    }
+  };
+
+  std::unordered_map<Position, std::unique_ptr<Cell>,
+                     SheetHasher,
+                     SheetKeyEqual> sheet_;
 };
 
 std::unique_ptr<SheetInterface> CreateSheet();

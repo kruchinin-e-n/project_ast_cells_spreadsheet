@@ -13,42 +13,45 @@
 class Sheet;
 
 class Cell : public CellInterface {
-    private:
-        class Impl;
+  private:
 
-        class EmptyImpl;
+  class Impl;
 
-        class TextImpl;
+  class EmptyImpl;
 
-        class FormulaImpl;
+  class TextImpl;
 
-        bool CheckForCircularDependencies(const Impl& new_impl) const;
+  class FormulaImpl;
 
-    public:
-        Cell(Sheet& sheet);
+  bool CheckForCircularDependencies(const Impl& new_impl) const;
 
-        ~Cell();
+  public:
 
-        void Set(std::string text);
+  Cell(Sheet& sheet);
 
-        void Clear();
+  ~Cell();
 
-        Value GetValue() const override;
+  void Set(std::string text);
 
-        std::string GetText() const override;
+  void Clear();
 
-        std::vector<Position> GetReferencedCells() const override;
+  Value GetValue() const override;
 
-        void InvalidateIncomingCellsCache();
+  std::string GetText() const override;
 
-        bool IsReferenced() const;
+  std::vector<Position> GetReferencedCells() const override;
 
-    private:
-        std::unique_ptr<Impl> impl_;
+  void InvalidateIncomingCellsCache();
 
-        std::unordered_set<Cell*> incoming_cells_;
+  bool IsReferenced() const;
 
-        std::unordered_set<Cell*> outgoing_cells_;
+private:
 
-        Sheet& sheet_;
+  std::unique_ptr<Impl> impl_;
+
+  std::unordered_set<Cell*> incoming_cells_;
+
+  std::unordered_set<Cell*> outgoing_cells_;
+
+  Sheet& sheet_;
 };

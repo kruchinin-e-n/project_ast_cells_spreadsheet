@@ -12,38 +12,26 @@ set(ANTLR_EXECUTABLE ${CMAKE_CURRENT_SOURCE_DIR}/antlr-4.12.0-complete.jar)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/FindANTLR.cmake)
 
-add_definitions(
-	-DANTLR4CPP_STATIC
-	-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-)
+add_definitions(-DANTLR4CPP_STATIC
+	        -D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
-set(
-	WITH_STATIC_CRT
-	OFF CACHE BOOL "Visual C++ static CRT for ANTLR" FORCE)
+set(WITH_STATIC_CRT OFF CACHE BOOL "Visual C++ static CRT for ANTLR" FORCE)
 
-add_subdirectory(
-	antlr4_runtime
-)
+add_subdirectory(antlr4_runtime)
 
-antlr_target(	FormulaParser
-				Formula.g4
-				LEXER
-				PARSER
-				LISTENER)
+antlr_target(FormulaParser Formula.g4 LEXER PARSER LISTENER)
 
-include_directories(	${ANTLR4_INCLUDE_DIRS}
-						${ANTLR_FormulaParser_OUTPUT_DIR}
-						${CMAKE_CURRENT_SOURCE_DIR}/antlr4_runtime/runtime/src)
+include_directories(${ANTLR4_INCLUDE_DIRS}
+		    ${ANTLR_FormulaParser_OUTPUT_DIR}
+		    ${CMAKE_CURRENT_SOURCE_DIR}/antlr4_runtime/runtime/src)
 
 file(GLOB sources *.cpp *.h)
 
-add_executable( spreadsheet	${ANTLR_FormulaParser_CXX_OUTPUTS}
-							${sources})
+add_executable(spreadsheet
+               ${ANTLR_FormulaParser_CXX_OUTPUTS}
+	       ${sources})
 
-target_link_libraries(
-	spreadsheet
-	antlr4_static
-)
+target_link_libraries(spreadsheet antlr4_static)
 
 if(MSVC)
 	target_compile_options(
@@ -51,17 +39,9 @@ if(MSVC)
 	PRIVATE /W0)
 endif()
 
-install(
-	TARGETS spreadsheet
-	DESTINATION bin
-	EXPORT spreadsheet
-)
+install(TARGETS spreadsheet DESTINATION bin EXPORT spreadsheet)
 
-set_directory_properties(
-	PROPERTIES
-	VS_STARTUP_PROJECT
-	spreadsheet
-)
+set_directory_properties(PROPERTIES VS_STARTUP_PROJECT spreadsheet)
 
 #./build cmake . -G "Visual Studio 17 2022" -DCMAKE_PREFIX_PATH=D:/Installed_programs/Protobuf -DCMAKE_BUILD_TYPE=<Debug>
 #cmake --build .
